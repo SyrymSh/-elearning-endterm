@@ -1,0 +1,24 @@
+<%- include("partials/header", { title: "Courses", user, flash }) %>
+
+<h1>Top Courses</h1>
+<p>Aggregation result: most enrolled courses with average progress.</p>
+
+<div class="grid">
+  <% data.forEach(x => { %>
+    <div class="card">
+      <div class="card__title"><%= x.title %></div>
+      <div class="kpi">
+        <div class="box">
+          <div class="big"><%= x.totalStudents %></div>
+          <div class="small">Students</div>
+        </div>
+        <div class="box">
+          <div class="big"><%= x.avgProgress %>%</div>
+          <div class="small">Avg progress</div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("partials/footer") %>

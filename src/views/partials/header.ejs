@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title || "E-learning" %></title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/">E-learning</a>
+
+      <nav class="nav">
+        <a href="/analytics">Analytics</a>
+
+        <a href="/">Courses</a>
+        <% if (user) { %>
+          <a href="/my-enrollments">My enrollments</a>
+          <% if (user.role === "instructor") { %>
+            <a href="/instructor/courses">Instructor</a>
+          <% } %>
+        <% } %>
+      </nav>
+
+      <div class="auth">
+        <% if (user) { %>
+          <span class="chip"><%= user.role %></span>
+          <form action="/auth/logout" method="post" class="inline">
+            <button class="btn btn--ghost" type="submit">Logout</button>
+          </form>
+        <% } else { %>
+          <a class="btn btn--primary" href="/login">Login</a>
+        <% } %>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+  <% if (flash) { %>
+    <div class="alert <%= flash.type === 'success' ? 'alert--success' : 'alert--error' %>">
+      <%= flash.msg %>
+    </div>
+  <% } %>

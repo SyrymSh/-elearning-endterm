@@ -1,0 +1,22 @@
+<%- include("partials/header", { title: "Create Course", user, flash }) %>
+
+<h1>Create Course</h1>
+<p>Create a new course. You can add syllabus lessons after creation.</p>
+
+<div class="card">
+  <form class="form" action="/api/courses" method="post">
+    <div class="field">
+      <label>Title</label>
+      <input name="title" required />
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea name="description" required></textarea>
+    </div>
+
+    <button class="btn btn--primary" type="submit">Create</button>
+  </form>
+</div>
+
+<%- include("partials/footer") %>

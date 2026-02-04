@@ -1,0 +1,19 @@
+<%- include("partials/header", { title: "Courses", user, flash }) %>
+
+<h1>Courses</h1>
+<p>Browse available courses and open details.</p>
+
+<div class="grid">
+  <% courses.forEach(c => { %>
+    <div class="card">
+      <div class="card__title"><a href="/courses/<%= c._id %>"><%= c.title %></a></div>
+      <div class="card__meta">Instructor: <%= c.instructor_id?.name || "Unknown" %></div>
+      <p><%= (c.description || "").slice(0, 120) %><%= (c.description || "").length > 120 ? "..." : "" %></p>
+      <div class="row" style="margin-top:12px;">
+        <a class="btn btn--primary" href="/courses/<%= c._id %>">Open</a>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("partials/footer") %>

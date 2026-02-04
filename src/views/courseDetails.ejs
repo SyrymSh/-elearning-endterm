@@ -1,0 +1,88 @@
+<%- include("partials/header", { title: course.title, user, flash }) %>
+
+<div class="row" style="justify-content:space-between; margin-top:18px;">
+  <div>
+    <h1 style="margin:0;"><%= course.title %></h1>
+    <p style="margin:6px 0 0;">Instructor: <b><%= course.instructor_id?.name || "Unknown" %></b></p>
+  </div>
+  <a class="btn" href="/">← Back</a>
+</div>
+
+<div class="grid">
+  <div class="card" style="grid-column: span 7;">
+    <h2>About</h2>
+    <p><%= course.description %></p>
+
+    <h2 style="margin-top:18px;">Syllabus</h2>
+
+    <% if (!course.syllabus.length) { %>
+      <p>No syllabus items yet.</p>
+    <% } %>
+
+    <div class="grid" style="margin-top:10px;">
+      <% course.syllabus
+        .slice()
+        .sort((a,b) => a.week - b.week)
+        .forEach(s => { %>
+          <div class="card" style="grid-column: span 6; padding:14px;">
+            <div class="row" style="justify-content:space-between;">
+              <div class="card__title">Week <%= s.week %>: <%= s.topic %></div>
+              <span class="chip">week <%= s.week %></span>
+            </div>
+            <div class="card__meta"><%= s.content %></div>
+          </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="card" style="grid-column: span 5;">
+    <h2>Actions</h2>
+
+    <% if (user && user.role === "student") { %>
+      <form action="/api/enrollments" method="post" style="margin-top:10px;">
+        <input type="hidden" name="course_id" value="<%= course._id %>">
+        <button class="btn btn--success" type="submit">Enroll</button>
+      </form>
+
+      <h2 style="margin-top:18px;">Add review</h2>
+      <form action="/api/reviews" method="post">
+        <input type="hidden" name="course_id" value="<%= course._id %>">
+
+        <div class="field">
+          <label>Rating (1–5)</label>
+          <input name="rating" type="number" min="1" max="5" required>
+        </div>
+
+        <div class="field">
+          <label>Comment</label>
+          <input name="comment">
+        </div>
+
+        <button class="btn btn--primary" type="submit">Submit review</button>
+      </form>
+    <% } else { %>
+      <p class="card__meta">Login as a student to enroll and leave a review.</p>
+      <a class="btn btn--primary" href="/login">Login</a>
+    <% } %>
+
+    <h2 style="margin-top:18px;">Reviews</h2>
+
+    <% if (!reviews.length) { %>
+      <p>No reviews yet.</p>
+    <% } %>
+
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <% reviews.forEach(r => { %>
+        <div style="border:1px solid var(--border); border-radius:14px; padding:12px; background:rgba(255,255,255,.03);">
+          <div class="row" style="justify-content:space-between;">
+            <b><%= r.student_id?.name || "Student" %></b>
+            <span class="chip"><%= r.rating %>/5</span>
+          </div>
+          <div class="card__meta" style="margin-top:6px;"><%= r.comment || "" %></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer") %>

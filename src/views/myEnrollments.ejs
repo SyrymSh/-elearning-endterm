@@ -1,0 +1,47 @@
+<%- include("partials/header", { title: "My Enrollments", user, flash }) %>
+
+<h1>My Enrollments</h1>
+<p>Track your progress and manage your enrolled courses.</p>
+
+<% if (!enrollments.length) { %>
+  <div class="card">
+    <div class="card__title">No enrollments yet</div>
+    <p>Go to the courses page and enroll in a course.</p>
+    <a class="btn btn--primary" href="/">Browse courses</a>
+  </div>
+<% } %>
+
+<div class="grid">
+  <% enrollments.forEach(e => { %>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <div class="card__title"><%= e.course_id?.title || "Course" %></div>
+          <div class="card__meta">Status: <b><%= e.status %></b></div>
+        </div>
+        <span class="chip"><%= e.progress %>%</span>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="progress" style="--p:<%= Math.min(100, Math.max(0, e.progress)) %>;">
+          <div class="progress__bar"></div>
+        </div>
+        <div class="card__meta" style="margin-top:6px;">Update progress (+10 recommended)</div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <form action="/api/enrollments/<%= e._id %>/progress?_method=PATCH" method="post" class="inline">
+          <input name="increment" type="number" value="10" min="1" max="100" style="width:90px;">
+          <button class="btn btn--success" type="submit">Add</button>
+        </form>
+
+        <form action="/api/enrollments/<%= e._id %>?_method=DELETE" method="post" class="inline">
+          <button class="btn btn--danger" type="submit">Drop</button>
+        </form>
+
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("partials/footer") %>

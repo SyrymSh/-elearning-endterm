@@ -1,0 +1,52 @@
+<%- include("partials/header", { title: "Courses", user, flash }) %>
+
+<h1>Login</h1>
+
+<div class="grid">
+  <div class="card" style="grid-column: span 6;">
+    <h2>Sign in</h2>
+    <form class="form" action="/auth/login" method="post">
+      <div class="field">
+        <label>Email</label>
+        <input name="email" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input name="password" type="password" required />
+      </div>
+      <button class="btn btn--primary" type="submit">Login</button>
+    </form>
+  </div>
+
+  <div class="card" style="grid-column: span 6;">
+    <h2>Create account</h2>
+    <form class="form" action="/auth/register" method="post">
+      <div class="field">
+        <label>Name</label>
+        <input name="name" required />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input name="email" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input name="password" type="password" required />
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <select name="role">
+          <option value="student">student</option>
+          <option value="instructor">instructor</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Instructor code (only for instructor)</label>
+        <input name="instructorCode" placeholder="e.g. aitu2026" />
+      </div>
+      <button class="btn btn--success" type="submit">Register</button>
+    </form>
+  </div>
+</div>
+
+<%- include("partials/footer") %>

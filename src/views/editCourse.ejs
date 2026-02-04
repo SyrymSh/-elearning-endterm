@@ -1,0 +1,68 @@
+<%- include("partials/header", { title: "Edit Course", user, flash }) %>
+
+<h1>Edit Syllabus</h1>
+<p><b><%= course.title %></b> — add or remove lessons.</p>
+
+<div class="grid">
+  <div class="card" style="grid-column: span 6;">
+    <h2>Add lesson</h2>
+    <form class="form" action="/api/courses/<%= course._id %>?_method=PATCH" method="post">
+      <div class="field">
+        <label>Week</label>
+        <input name="addLesson[week]" type="number" min="1" required />
+      </div>
+      <div class="field">
+        <label>Topic</label>
+        <input name="addLesson[topic]" required />
+      </div>
+      <div class="field">
+        <label>Content</label>
+        <textarea name="addLesson[content]" required></textarea>
+      </div>
+      <button class="btn btn--success" type="submit">Add to syllabus</button>
+    </form>
+  </div>
+
+  <div class="card" style="grid-column: span 6;">
+    <h2>Remove lesson</h2>
+    <form class="form" action="/courses/<%= course._id %>?_method=PATCH" method="post">
+      <div class="field">
+        <label>Remove by week number</label>
+        <input name="removeWeek" type="number" min="1" required />
+      </div>
+      <button class="btn btn--danger" type="submit">Remove</button>
+    </form>
+  </div>
+</div>
+
+<h2>Current syllabus</h2>
+
+<% if (!course.syllabus.length) { %>
+  <div class="card">
+    <p>No syllabus items yet.</p>
+  </div>
+<% } %>
+
+<div class="grid">
+  <% course.syllabus
+    .slice()
+    .sort((a,b) => a.week - b.week)
+    .forEach(s => { %>
+    <div class="card" style="grid-column: span 6;">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <div class="card__title">Week <%= s.week %>: <%= s.topic %></div>
+          <div class="card__meta"><%= s.content %></div>
+        </div>
+        <span class="chip">week <%= s.week %></span>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<div class="row" style="margin-top: 12px;">
+  <a class="btn" href="/instructor/courses">Back</a>
+  <a class="btn btn--primary" href="/courses/<%= course._id %>">View course</a>
+</div>
+
+<%- include("partials/footer") %>

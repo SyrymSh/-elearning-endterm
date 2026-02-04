@@ -1,0 +1,41 @@
+<%- include("partials/header", { title: "Instructor", user, flash }) %>
+
+<h1>Instructor Panel</h1>
+<p>Manage your courses and syllabus.</p>
+
+<div class="row" style="margin: 10px 0 18px;">
+  <a class="btn btn--primary" href="/instructor/create-course">Create course</a>
+  <a class="btn" href="/analytics">Analytics</a>
+</div>
+
+<% if (!courses.length) { %>
+  <div class="card">
+    <div class="card__title">No courses yet</div>
+    <p>Create your first course to start enrolling students.</p>
+    <a class="btn btn--primary" href="/instructor/create-course">Create course</a>
+  </div>
+<% } %>
+
+<div class="grid">
+  <% courses.forEach(c => { %>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <div class="card__title"><a href="/courses/<%= c._id %>"><%= c.title %></a></div>
+          <div class="card__meta"><%= (c.description || "").slice(0, 90) %><%= (c.description || "").length > 90 ? "..." : "" %></div>
+        </div>
+        <span class="chip"><%= (c.syllabus || []).length %> lessons</span>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <a class="btn" href="/instructor/edit-course/<%= c._id %>">Edit syllabus</a>
+
+        <form action="/api/courses/<%= c._id %>?_method=DELETE" method="post" class="inline">
+          <button class="btn btn--danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("partials/footer") %>
