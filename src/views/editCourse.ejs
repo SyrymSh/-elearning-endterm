@@ -25,7 +25,7 @@
 
   <div class="card" style="grid-column: span 6;">
     <h2>Remove lesson</h2>
-    <form class="form" action="/courses/<%= course._id %>?_method=PATCH" method="post">
+    <form class="form" action="/api/courses/<%= course._id %>?_method=PATCH" method="post">
       <div class="field">
         <label>Remove by week number</label>
         <input name="removeWeek" type="number" min="1" required />
