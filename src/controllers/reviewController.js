@@ -7,25 +7,40 @@ const Review = require("../models/Review");
 exports.addReview = async (req, res) => {
   const { course_id, rating, comment } = req.body;
 
-  if (!course_id || !rating) {
-    return res.status(400).send("course_id and rating required");
+  try {
+    await Review.create({
+      student_id: req.session.user.id,
+      course_id,
+      rating,
+      comment
+    });
+
+    const wantsHTML = req.headers.accept && req.headers.accept.includes("text/html");
+    if (wantsHTML) {
+      req.session.flash = { type: "success", msg: "Review added." };
+      return res.redirect(`/courses/${course_id}`);
+    }
+
+    res.status(201).send("Review added");
+  } catch (err) {
+    // 🔥 DUPLICATE REVIEW
+    if (err.code === 11000) {
+      const wantsHTML = req.headers.accept && req.headers.accept.includes("text/html");
+      if (wantsHTML) {
+        req.session.flash = {
+          type: "error",
+          msg: "You have already reviewed this course."
+        };
+        return res.redirect(`/courses/${course_id}`);
+      }
+
+      return res.status(400).send("Review already exists");
+    }
+
+    throw err; // unexpected error
   }
-
-  const review = await Review.create({
-    student_id: req.session.user.id,
-    course_id,
-    rating,
-    comment
-  });
-
-  const wantsHTML = req.headers.accept && req.headers.accept.includes("text/html");
-  if (wantsHTML) {
-    req.session.flash = { type: "success", msg: "Review added." };
-    return res.redirect(`/courses/${course_id}`);
-  }
-
-  res.status(201).json(review);
 };
+
 
 /**
  * GET /reviews/course/:courseId
